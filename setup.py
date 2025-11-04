@@ -25,5 +25,5 @@ setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    requires=["request"],
+    install_requires=["requests>=2.31.0"],
 )
