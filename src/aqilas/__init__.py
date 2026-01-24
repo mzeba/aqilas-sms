@@ -1,17 +1,18 @@
-from typing import List, Optional, Union
 import threading
+from importlib.metadata import version
+from typing import List, Optional, Union
 
-from sms.aqilas import AqilasClient, BASE_URL
-
-from sms.aqilas import (
+from .sms import (
+    BASE_URL,
+    APIError,
+    AqilasClient,
     CreditSuccess,
     SendSmsSuccess,
     SmsStatusItem,
     SmsStatusSuccess,
-    APIError,
 )
 
-
+__version__ = version("aqilas")
 __all__ = [
     "AqilasClient",
     "CreditSuccess",

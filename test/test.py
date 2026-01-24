@@ -1,12 +1,12 @@
 import unittest
 from unittest.mock import Mock
 
-from sms import (
+from aqilas import (
     AqilasClient,
     CreditSuccess,
     SendSmsSuccess,
-    SmsStatusSuccess,
     SmsStatusItem,
+    SmsStatusSuccess,
 )
 
 

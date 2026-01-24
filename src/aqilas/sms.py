@@ -1,20 +1,20 @@
 from __future__ import annotations
 
-from typing import Any, Iterable, List, Optional, Union
 import logging
+from typing import Any, Iterable, List, Optional, Union
 
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from sms.types import (
+from .types import (
+    APIError,
     CreditSuccess,
     SendSmsSuccess,
     SmsStatusItem,
     SmsStatusSuccess,
-    APIError,
 )
-from sms.utils import BASE_URL
+from .utils import BASE_URL
 
 
 class AqilasClient:
