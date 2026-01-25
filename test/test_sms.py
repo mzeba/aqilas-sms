@@ -1,13 +1,8 @@
 import unittest
 from unittest.mock import Mock
 
-from aqilas import (
-    AqilasClient,
-    CreditSuccess,
-    SendSmsSuccess,
-    SmsStatusItem,
-    SmsStatusSuccess,
-)
+from aqilas import AqilasClient
+from aqilas.base import CreditSuccess, SendSmsSuccess, SmsStatusItem, SmsStatusSuccess
 
 
 class TestAqilasClient(unittest.TestCase):
