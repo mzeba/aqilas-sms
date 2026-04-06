@@ -1,18 +1,11 @@
 # --- Convenience shared client helpers ---
 # module-level default client and lock for thread-safety
 import threading
-from importlib.metadata import version
-from typing import List, Optional, Union
+from typing import Any, Dict, List, Optional
 
-from .base import (
-    BASE_URL,
-    APIError,
-    AqilasClient,
-    CreditSuccess,
-    SendSmsSuccess,
-    SmsStatusItem,
-    SmsStatusSuccess,
-)
+from .base import AqilasClient
+from .types import AqilasNotInitializedError
+from .utils import BASE_URL
 
 _default_client: Optional["AqilasClient"] = None
 _client_lock = threading.RLock()
@@ -50,10 +43,10 @@ def init_client(
 
 
 def get_client() -> "AqilasClient":
-    """Return the module-level shared client or raise RuntimeError if not initialized."""
+    """Return the shared client or raise if it has not been initialized."""
     with _client_lock:
         if _default_client is None:
-            raise RuntimeError(
+            raise AqilasNotInitializedError(
                 "AqilasClient is not initialized. Call init_client(token, ...) first."
             )
         return _default_client
@@ -75,7 +68,7 @@ def get_credit(
     token: Optional[str] = None,
     base_url: Optional[str] = None,
     timeout: Optional[float] = None,
-) -> Union[CreditSuccess, APIError]:
+) -> Dict[str, Any]:
     """Convenience function: get credit using shared client or a temporary client if token is provided.
 
     If `token` is provided a temporary client is used for the call and closed afterwards.
@@ -88,10 +81,10 @@ def get_credit(
             base_url=base_url or BASE_URL,
             timeout=timeout,
         ) as client:
-            return client.get_credit()
+            return client.safe_get_credit()
 
     client = get_client()
-    return client.get_credit()
+    return client.safe_get_credit()
 
 
 def send_sms(
@@ -101,7 +94,7 @@ def send_sms(
     token: Optional[str] = None,
     base_url: Optional[str] = None,
     timeout: Optional[float] = None,
-) -> Union[SendSmsSuccess, APIError]:
+) -> Dict[str, Any]:
     """Convenience function to send an SMS via shared client or temporary client if token given."""
     if token:
         # Use context manager so the session is closed automatically
@@ -110,18 +103,20 @@ def send_sms(
             base_url=base_url or BASE_URL,
             timeout=timeout,
         ) as client:
-            return client.send_sms(sender=sender, receivers=receivers, content=content)
+            return client.safe_send_sms(
+                sender=sender, receivers=receivers, content=content
+            )
 
     client = get_client()
-    return client.send_sms(sender=sender, receivers=receivers, content=content)
+    return client.safe_send_sms(sender=sender, receivers=receivers, content=content)
 
 
 def get_sms_status(
-    bulkid: str,
+    bulk_id: str,
     token: Optional[str] = None,
     base_url: Optional[str] = None,
     timeout: Optional[float] = None,
-) -> Union[SmsStatusSuccess, APIError]:
+) -> Dict[str, Any]:
     """Convenience function to get SMS status via shared client or temporary client if token given."""
     if token:
         # Use context manager so the session is closed automatically
@@ -130,7 +125,7 @@ def get_sms_status(
             base_url=base_url or BASE_URL,
             timeout=timeout,
         ) as client:
-            return client.get_sms_status(bulkid=bulkid)
+            return client.safe_get_sms_status(bulk_id=bulk_id)
 
     client = get_client()
-    return client.get_sms_status(bulkid=bulkid)
+    return client.safe_get_sms_status(bulk_id=bulk_id)

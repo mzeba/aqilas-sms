@@ -25,8 +25,8 @@ requires = ["setuptools>=77.0"]
 build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = ["pytest", "python-dotenv"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["test"]
 python_files = ["test_*.py"]
